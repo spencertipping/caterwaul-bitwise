@@ -1,0 +1,25 @@
+Caterwaul bitwise library | Spencer Tipping
+Licensed under the terms of the MIT source code license
+
+Introduction.
+This library introduces some new macros into Caterwaul; these allow you to efficiently represent various bitwise quantities and splice things together. The underlying format is always an array
+of bytes, which is inefficient in V8 but has the advantage that it can be easily written to Buffer objects. By extension, most functions that expect to receive arrays in this library can
+accept Buffer objects as well. It also has the advantage that you can use it in conjunction with the binary output from caterwaul-struct.
+
+caterwaul.module('bitwise', 'js_all', function ($) {
+
+Numeric macros.
+The core macro here is one which produces a bit-splicing expression based on the given template. For example, suppose you want to encode an extended mod/RM byte with a REX prefix. You can do
+this by splicing bits:
+
+| modrm_64(opcode, mod, reg, rm) = b01001.reg[3-3].b0.rm[3-3] + opcode[8] + mod[2].reg[2-0].rm[2-0] -bitwise
+
+You can't generate more than one byte at a time; this prevents endianness from being an issue at the cost of a little bit of verbosity. You can, however, index into higher bits of things. For
+instance, you can get to the high byte of a Javascript int:
+
+| high_byte(n) = n/31 -bitwise
+
+TODO: Come up with a more elegant syntax. The current bitwise slicing is awful.
+
+
+});
