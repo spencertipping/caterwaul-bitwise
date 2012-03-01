@@ -9,17 +9,41 @@ accept Buffer objects as well. It also has the advantage that you can use it in 
 caterwaul.module('bitwise', 'js_all', function ($) {
 
 Numeric macros.
-The core macro here is one which produces a bit-splicing expression based on the given template. For example, suppose you want to encode an extended mod/RM byte with a REX prefix. You can do
-this by splicing bits:
+The most common case for most purposes is grabbing a contiguous range of bits or transcoding a large number into a small number of bits. For example, OR-maskable flags could be represented as
+single bits concatenated into a larger number:
 
-| modrm_64(opcode, mod, reg, rm) = b01001.reg[3-3].b0.rm[3-3] + opcode[8] + mod[2].reg[2-0].rm[2-0] -bitwise
+| flags(r, w, x) = b0*5 + r + w + x
 
-You can't generate more than one byte at a time; this prevents endianness from being an issue at the cost of a little bit of verbosity. You can, however, index into higher bits of things. For
-instance, you can get to the high byte of a Javascript int:
+Literal bit-vector quantities can be written in binary or hexadecimal. This library also provides a macro for writing literal integers that suppresses constant-folding (this might be helpful
+if you're running un-precompiled bit manipulation code on Firefox, for example):
 
-| high_byte(n) = n/31 -bitwise
+| b10010101     <- bit vector for the number 128 + 16 + 4 + 1
+  xff           <- bit vector for 255 (width = 8 bits)
+  x00ff         <- bit vector for 255 (width = 16 bits)
+  b0            <- bit vector for the number 0, and has a default bit width of 1
+  i317          <- the number 317, but Firefox doesn't know this so it won't constant-fold your code.
 
-TODO: Come up with a more elegant syntax. The current bitwise slicing is awful.
+These quantities are stored in a 'bit vector' data structure that is accessible as an array of bytes but has extra methods for dealing with bits directly. In particular, bit vectors know their
+logical bit-width; this is important for things like repetition.
+
+
+
+Splicing.
+This library supports a few different operations for bit selection and splicing. The simplest is /x, which grabs bit x from the receiver. For example, you could write n/5 to get bit 5 (= 32)
+from the number n. n must be an integer, not a float, for this to work sensibly. You can repeat a bit-vector quantity using *: b10*5 = b1010101010. More complex splicing can be achieved using
+[] notation, which has the following semantics:
+
+| n[x]          <- grab bit x from n
+  n[x*y]        <- repeat bit x from n y times
+  n[x%y]        <- grab bits from x to y from n (both ends are inclusive)
+  n[x,y]        <- grab bit x, then bit y from n
+
+These operations can all be combined. For example (see 'Numeric macros' for an explanation of the iN notation):
+
+| n[3,i0*4]     <- grab bit 3 followed by bit 0 repeated 4 times
+  n[7%4*i3]     <- repeat bits 7-4 (inclusive) three times for a total of 12 bits
+  n[5,7,8%2]    <- bit 5 followed by bit 7 followed by bits 8-2, inclusive
+
 
 
 });
