@@ -20,6 +20,8 @@ when it's a setter it returns the receiver).
     bit(n, b) = arguments.length === 2 ? this.set_bit(n, b) -then- this : this.get_bit(n),  set_bit(n, b) = b ? this[n >>> 3] |= 1 << (n & 7) : this[n >>> 3] &= ~(1 << (n & 7)),
                                                                                             get_bit(n)    = !!(this[n >>> 3] & 1 << (n & 7)),
 
+    push(x)   = (this[++this.bit_width >>> 3] |= 0) -then- this.bit(this.bit_width - 1, x),
+
 Bit group access.
 These functions access single bits or ranges of bits, but they all return more bit-vector objects. The functions here are prefixed with bit_ to avoid conflicts with array methods. Most of
 these functions are grossly inefficient from a constant-overhead and memory allocation perspective.

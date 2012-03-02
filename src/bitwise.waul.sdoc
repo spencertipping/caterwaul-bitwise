@@ -7,6 +7,7 @@ of bytes, which is inefficient in V8 but has the advantage that it can be easily
 accept Buffer objects as well. It also has the advantage that you can use it in conjunction with the binary output from caterwaul-struct.
 
 caterwaul.module('bitwise', 'js_all', function ($) {
+  $.bitwise(caterwaul_function) = caterwaul_function -se [it.modifiers.bitwise = $.grammar('B S', 'B[_x]', given [rule, anon] in toplevel_rules /~concat/ slice_rules
 
 Numeric macros.
 The most common case for most purposes is grabbing a contiguous range of bits or transcoding a large number into a small number of bits. For example, OR-maskable flags could be represented as
@@ -26,7 +27,15 @@ if you're running un-precompiled bit manipulation code on Firefox, for example):
 These quantities are stored in a 'bit vector' data structure that is accessible as an array of bytes but has extra methods for dealing with bits directly. In particular, bit vectors know their
 logical bit-width; this is important for things like repetition.
 
+  -where [literal(m)               = /^b([01]+)$/.exec(m._x.data) /!binary || /^x([0-9a-f]+)$/.exec(m._x.data) /!hex || /^i([0-9]+)$/.exec(m._x.data) /!integer,
 
+          // Note: egregiously inefficient.
+          constructor_for_bits(bs) = bs /['new caterwaul.bit_vector(0)'.qs]['_e.bit(_n, _y)'.qs /~replace/ {_e: x0, _n: '#{xi}', _y: x ? '1' : '0'}] -seq,
+
+          // Note: even more egregiously inefficient.
+          binary(m)                = m && constructor_for_bits(m[1].split('') *[+xs[xl - xi - 1]] -seq),
+          hex(m)                   = m && constructor_for_bits(m[1].split('') *['0123456789abcdef'.indexOf(x)] *~!~[n[4] *i[xs[xl - xi - 1] >>> i & 1]] -seq),
+          integer(m)               = m && new $.syntax(m[1]),
 
 Splicing.
 This library supports a few different operations for bit selection and splicing. The simplest is /x, which grabs bit x from the receiver. For example, you could write n/5 to get bit 5 (= 32)
@@ -44,6 +53,10 @@ These operations can all be combined. For example (see 'Numeric macros' for an e
   n[7%4*i3]     <- repeat bits 7-4 (inclusive) three times for a total of 12 bits
   n[5,7,8%2]    <- bit 5 followed by bit 7 followed by bits 8-2, inclusive
 
+          toplevel_rules           = ['B[_x]'.qs /-rule/ literal,  'B[_x * _y]'.qs |-rule| '_x /~bit_repeat/ _y'.qse                   /-$.anonymizer/ 'each',
+                                                                   'B[_x / _y]'.qs |-rule| '_x / i /~bit_slice/ i -where [i = _y]'.qse /-$.anonymizer/ 'i',
+                                                                   'B[_x[_y]]'.qs  /-rule/ 'S[_x[_y]]'.qs],
 
-
-});
+          slice_rules              = ['S[_v[_x, _y]]'.qs  /-rule/ 'S[_v[_x]] /~bit_concat/ S[_v[_y]]'.qse,
+                                      'S[_v[_x % _y]]'.qs /-rule/ '_v / _x /~bit_slice/ _y'.qse,
+                                      'S[_v[_x * _y]]'.qs /-rule/ '_v /~bit_repeat/ _y'.qse]])]});

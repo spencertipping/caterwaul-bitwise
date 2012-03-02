@@ -1,7 +1,8 @@
 caterwaul.module( 'bit-vector' ,function($) { (function(it) {return($.merge(it.prototype, {bit:function(n,b) {;
 return arguments.length===2? ( (this.set_bit(n,b) ) , (this) ) :this.get_bit(n) } ,set_bit:function(n,b) {;
 return b?this[n>>>3] |=1<< (n&7) :this[n>>>3] &= ~ (1<< (n&7) ) } ,get_bit:function(n) {;
-return! ! (this[n>>>3] &1<< (n&7) ) } ,bit_slice:function(from,to) {;
+return! ! (this[n>>>3] &1<< (n&7) ) } ,push:function(x) {;
+return( ( (this[ ++this.bit_width>>>3] |=0) ) , (this.bit(this.bit_width-1,x) ) ) } ,bit_slice:function(from,to) {;
 return(function(it) {return( (function(xs) {var x,x0,xi,xl,xr;
 for(var xi=0,xl=xs.length;
 xi<xl;
