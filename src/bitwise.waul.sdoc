@@ -34,7 +34,7 @@ logical bit-width; this is important for things like repetition.
 
           // Note: even more egregiously inefficient.
           binary(m)                = m && constructor_for_bits(m[1].split('') *[+xs[xl - xi - 1]] -seq),
-          hex(m)                   = m && constructor_for_bits(m[1].split('') *['0123456789abcdef'.indexOf(x)] *~!~[n[4] *i[xs[xl - xi - 1] >>> i & 1]] -seq),
+          hex(m)                   = m && constructor_for_bits(m[1].split('') *['0123456789abcdef'.indexOf(x)] *~![n[4] *i[xs[xl - xi - 1] >>> i & 1] -seq] -seq),
           integer(m)               = m && new $.syntax(m[1]),
 
 Splicing.
@@ -53,8 +53,8 @@ These operations can all be combined. For example (see 'Numeric macros' for an e
   n[7%4*i3]     <- repeat bits 7-4 (inclusive) three times for a total of 12 bits
   n[5,7,8%2]    <- bit 5 followed by bit 7 followed by bits 8-2, inclusive
 
-          toplevel_rules           = ['B[_x]'.qs /-rule/ literal,  'B[_x * _y]'.qs |-rule| '_x /~bit_repeat/ _y'.qse                   /-$.anonymizer/ 'each',
-                                                                   'B[_x / _y]'.qs |-rule| '_x / i /~bit_slice/ i -where [i = _y]'.qse /-$.anonymizer/ 'i',
+          toplevel_rules           = ['B[_x]'.qs /-rule/ literal,  'B[_x * _y]'.qs |-rule| '_x /~bit_repeat/ _y'.qse,
+                                                                   'B[_x / _y]'.qs |-rule| $.anonymizer('i')('_x / i /~bit_slice/ i -where [i = _y]'.qse),
                                                                    'B[_x[_y]]'.qs  /-rule/ 'S[_x[_y]]'.qs],
 
           slice_rules              = ['S[_v[_x, _y]]'.qs  /-rule/ 'S[_v[_x]] /~bit_concat/ S[_v[_y]]'.qse,
