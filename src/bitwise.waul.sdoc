@@ -15,27 +15,24 @@ single bits concatenated into a larger number:
 
 | flags(r, w, x) = b0*5 << r << w << x |bitwise
 
-Literal bit-vector quantities can be written in binary or hexadecimal. This library also provides a macro for writing literal integers that suppresses constant-folding (this might be helpful
-if you're running un-precompiled bit manipulation code on Firefox, for example):
+Literal bit-vector quantities can be written in binary or hexadecimal:
 
 | b10010101     <- bit vector for the number 128 + 16 + 4 + 1
   xff           <- bit vector for 255 (width = 8 bits)
   x00ff         <- bit vector for 255 (width = 16 bits)
   b0            <- bit vector for the number 0, and has a default bit width of 1
-  i317          <- the number 317, but Firefox doesn't know this so it won't constant-fold your code.
 
 These quantities are stored in a 'bit vector' data structure that is accessible as an array of bytes but has extra methods for dealing with bits directly. In particular, bit vectors know their
 logical bit-width; this is important for things like repetition.
 
-  -where [literal(m)               = /^b([01]+)$/.exec(m._x.data) /!binary || /^x([0-9a-f]+)$/.exec(m._x.data) /!hex || /^i([0-9]+)$/.exec(m._x.data) /!integer,
+  -where [literal(m)               = /^b([01]+)$/.exec(m._x.data) /!binary || /^x([0-9a-fA-F]+)$/.exec(m._x.data) /!hex,
 
           // Note: egregiously inefficient.
           constructor_for_bits(bs) = bs /['new caterwaul.bit_vector(0)'.qs]['_e.push(_y)'.qs /~replace/ {_e: x0, _y: x ? '1' : '0'}] -seq,
 
           // Note: even more egregiously inefficient.
           binary(m)                = m && constructor_for_bits(m[1].split('') *[+xs[xl - xi - 1]] -seq),
-          hex(m)                   = m && constructor_for_bits(m[1].split('') *['0123456789abcdef'.indexOf(x)] *~![n[4] *i[xs[xl - xi - 1] >>> i & 1] -seq] -seq),
-          integer(m)               = m && new $.syntax(m[1]),
+          hex(m)                   = m && constructor_for_bits(m[1].toLowerCase().split('') *['0123456789abcdef'.indexOf(x)] *~![n[4] *i[xs[xl - xi - 1] >>> i & 1] -seq] -seq),
 
           toplevel_rules           = ['B[_x]'.qs /-rule/ literal,  'B[+_x]'.qs      |-rule| 'new caterwaul.bit_vector(0) /~push/ _x'.qse,
                                                                    'B[_x * _y]'.qs  |-rule| 'B[_x] /~bit_repeat/ _y'.qse,
@@ -54,12 +51,12 @@ from the number n. n must be an integer, not a float, for this to work sensibly.
   n[x%y]        <- grab bits from x to y from n (both ends are inclusive)
   n[x,y]        <- grab bit x, then bit y from n
 
-These operations can all be combined. For example (see 'Numeric macros' for an explanation of the iN notation):
+These operations can all be combined. For example:
 
-| n[3,i0*4]     <- grab bit 3 followed by bit 0 repeated 4 times
-  n[7%4*i3]     <- repeat bits 7-4 (inclusive) three times for a total of 12 bits
+| n[3,0*4]      <- grab bit 3 followed by bit 0 repeated 4 times
+  n[7%4*3]      <- repeat bits 7-4 (inclusive) three times for a total of 12 bits
   n[5,7,8%2]    <- bit 5 followed by bit 7 followed by bits 8-2, inclusive
 
-          slice_rules              = ['S[_v[_x, _y]]'.qs  |-rule| 'S[_v[_x]] /~bit_concat/ S[_v[_y]]'.qse,
-                                      'S[_v[_x % _y]]'.qs |-rule| '_v / _x /~bit_slice/ _y'.qse,
-                                      'S[_v[_x * _y]]'.qs |-rule| '_v /~bit_repeat/ _y'.qse]])]});
+          slice_rules              = ['S[_v[_x]]'.qs |-rule| 'new caterwaul.bit_vector(0) /~push/ _v.bit(_x)'.qse, 'S[_v[_x, _y]]'.qs  |-rule| 'S[_v[_x]] /~bit_concat/ S[_v[_y]]'.qse,
+                                                                                                                   'S[_v[_x % _y]]'.qs |-rule| '_v / _x /~bit_slice/ _y'.qse,
+                                                                                                                   'S[_v[_x * _y]]'.qs |-rule| 'S[_v[_x]] /~bit_repeat/ _y'.qse]])]});
