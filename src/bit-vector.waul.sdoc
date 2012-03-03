@@ -9,7 +9,7 @@ Note that bit indexes go from right to left, not left to right. This has some od
 about writing something like an assembler, but numeric quantities are not well-represented by this structure.
 
 caterwaul.module('bit-vector', 'js_all', function ($) {
-  ($.bit_vector(bit_width) = this instanceof $.bit_vector ? this -se [it.width = bit_width, it.length = Math.ceil(bit_width / 8), it /-$.merge/ (n[it.length] *[0] /seq)]
+  ($.bit_vector(bit_width) = this instanceof $.bit_vector ? this -se [it.width = bit_width || 0, it.length = 7 + bit_width >>> 3, n[it.length] *![it[x] = 0] -seq]
                                                           : new $.bit_vector(bit_width))
   -se- it.prototype /-$.merge/ capture [
 
@@ -20,12 +20,12 @@ when it's a setter it returns the receiver).
     bit(n, b) = arguments.length === 2 ? this.set_bit(n, b) -then- this : this.get_bit(n),  set_bit(n, b) = b ? this[n >>> 3] |= 1 << (n & 7) : this[n >>> 3] &= ~(1 << (n & 7)),
                                                                                             get_bit(n)    = !!(this[n >>> 3] & 1 << (n & 7)),
 
-    push(x)   = (this[++this.bit_width >>> 3] |= 0) -then- this.bit(this.bit_width - 1, x),
+    push(x)   = (this[(this.length = 7 + ++this.width >>> 3) - 1] |= 0) -then- this.bit(this.width - 1, x),
 
 Bit group access.
 These functions access single bits or ranges of bits, but they all return more bit-vector objects. The functions here are prefixed with bit_ to avoid conflicts with array methods. Most of
 these functions are grossly inefficient from a constant-overhead and memory allocation perspective.
 
     bit_slice(from, to) = new this.constructor(from - to + 1)        -se [ni[from, to, -1]  *![it.bit(x, this.bit(x))] -seq],
-    bit_repeat(n)       = new this.constructor(this.width * n)       -se [n[this.width * n] *![it.bit(x, this.bit(x % n))] -seq],
+    bit_repeat(n)       = new this.constructor(this.width * n)       -se [n[it.width] *![it.bit(x, this.bit(x % this.width))] -seq],
     bit_concat(v)       = new this.constructor(this.width + v.width) -se [n[v.width] *![it.bit(x, v.bit(x))] -seq, n[this.width] *![it.bit(x + v.width, this.bit(x))] -seq]]});
