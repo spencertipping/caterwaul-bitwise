@@ -1736,6 +1736,7 @@ of bytes, which is inefficient in V8 but has the advantage that it can be easily
 accept Buffer objects as well. It also has the advantage that you can use it in conjunction with the binary output from caterwaul-struct.
 
 caterwaul.module('bitwise', 'js_all', function ($) {
+  $.all /~push/ 'bitwise',
   $.bitwise(caterwaul_function) = caterwaul_function -se [it.modifiers.bitwise = $.grammar('B S', 'B[_x]', given [rule, anon] in toplevel_rules /~concat/ slice_rules
 
 Numeric macros.

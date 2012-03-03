@@ -1,4 +1,4 @@
-caterwaul.module( 'bitwise' , (function(qs,qs1,qs2,qs3,qse,qs4,qse1,qs5,qse2,qs6,qse3,qs7,qse4,qs8,qs9,qsa,qse5,qsb,qse6,qsc,qse7,qsd,qse8) {var result= (function($) {$.bitwise=function(caterwaul_function) {;
+caterwaul.module( 'bitwise' , (function(qs,qs1,qs2,qs3,qse,qs4,qse1,qs5,qse2,qs6,qse3,qs7,qse4,qs8,qs9,qsa,qse5,qsb,qse6,qsc,qse7,qsd,qse8) {var result= (function($) { ($.all) .push( 'bitwise' ) ,$.bitwise=function(caterwaul_function) {;
 return(function(it) {return(it.modifiers.bitwise=$.grammar( 'B S' , 'B[_x]' , (function(rule,anon) {return(function( ) {var literal=function(m) {;
 return binary( /^b([01]+)$/ .exec(m._x.data) ) ||hex( /^x([0-9a-fA-F]+)$/ .exec(m._x.data) ) } ,constructor_for_bits=function(bs) {;
 return(function(xs) {var x,x0,xi,xl,xr;
