@@ -255,6 +255,7 @@ meta::functor::editable 'waul', inherit => 1, extension => '.waul', default => '
 __
 meta::alias('e', 'edit sdoc::waul::bitwise');
 meta::alias('er', 'edit sdoc::readme');
+meta::alias('erf', 'edit function::render');
 meta::alias('ev', 'edit sdoc::waul::bit-vector');
 meta::bootstrap('html', <<'__');
 <html>
@@ -632,16 +633,14 @@ __
 meta::function('reload', 'around_hook(\'reload\', sub {execute($_) for grep ! /^bootstrap::/, keys %data});');
 meta::function('render', <<'__');
 my ($options, @stuff) = separate_options(@_);
+my @wauls = grep s/^sdoc::waul:://, sort keys %data;
 
-unlink <src/*>;
-file::write("src/$_.waul.sdoc", retrieve("sdoc::waul::$_"), mkpath => 1) for grep s/^sdoc::waul:://, sort keys %data;
+file::write("src/$_.md",   retrieve("markdown::waul::$_"), mkpath => 1),
+file::write("src/$_.waul", retrieve("waul::$_")) for @wauls;
 
-unless ($$options{-W}) {
-  terminal::info('waul-compiling; specify -W to skip this');
-  sh('waul src/bitwise.waul.sdoc');
-  sh('waul src/bit-vector.waul.sdoc')}
-
-chmod 0400, <src/*>;            # Remove write privilege, since these files are all generated
+terminal::info('waul-compiling; specify -W to skip this'),
+sh('waul src/bitwise.waul    && mv src/bitwise.js ./'),
+sh('waul src/bit-vector.waul && mv src/bit-vector.js ./') unless $$options{-W};
 
 __
 meta::function('repl', <<'__');
