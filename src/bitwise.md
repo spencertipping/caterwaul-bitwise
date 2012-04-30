@@ -9,7 +9,7 @@ accept Buffer objects as well. It also has the advantage that you can use it in 
 
     caterwaul.module('bitwise', 'js_all', function ($) {
       $.all /~push/ 'bitwise',
-      $.bitwise(caterwaul_function) = caterwaul_function -se [it.modifiers.bitwise = $.grammar('B S', {initial: 'B[_x]'.qs}, given [rule, anon] in toplevel_rules /~concat/ slice_rules
+      $.bitwise(caterwaul_function) = caterwaul_function -se [it.modifiers.bitwise = $.grammar('B S', {initial: 'B[_expression]'.qs}, given [rule, anon] in toplevel_rules /~concat/ slice_rules
 
 # Numeric macros
 
