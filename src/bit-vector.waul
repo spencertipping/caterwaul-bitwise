@@ -25,8 +25,8 @@ caterwaul.module('bit-vector', 'js_all', function ($) {
     push(x)    = (this[(this.length = 7 + ++this.width >>> 3) - 1] |= 0) -then- this.bit(this.width - 1, x),
 
     toString() = ni[this.width - 1, 0, -1] *[(xi & 7 ? '' : ' ') + +this.bit(x)] -seq -re- it.join(''),
-    array()    = +this -seq,
-    buffer()   = new Buffer(this.length) -se- this *![it[xi] = x] /seq,         // Only works in node.js
+    array()    = []                      -se- this *![it[xl - xi - 1] = x] /seq,
+    buffer()   = new Buffer(this.length) -se- this *![it[xl - xi - 1] = x] /seq,         // Only works in node.js
 
 # Bit group access.
 # These functions access single bits or ranges of bits, but they all return more bit-vector objects. The functions here are prefixed with bit_ to avoid conflicts with array methods. Most of

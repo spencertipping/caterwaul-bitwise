@@ -16,11 +16,15 @@ d>0?i<=u
 :i>=u;
 i+=s)r.push(i) ;
 return r} ) ( (this.width-1) , (0) , ( -1) ) ) ) ) } ,array:function() {;
-return Array.prototype.slice.call( (this) ) } ,buffer:function() {;
 return(function(it) {return(function(xs) {var x,x0,xi,xl,xr;
 for(var xi=0,xl=xs.length;
 xi<xl;
- ++xi)x=xs[xi] , (it[xi] =x) ;
+ ++xi)x=xs[xi] , (it[xl-xi-1] =x) ;
+return xs} ) .call(this,this) ,it} ) .call(this, ( [] ) ) } ,buffer:function() {;
+return(function(it) {return(function(xs) {var x,x0,xi,xl,xr;
+for(var xi=0,xl=xs.length;
+xi<xl;
+ ++xi)x=xs[xi] , (it[xl-xi-1] =x) ;
 return xs} ) .call(this,this) ,it} ) .call(this, (new Buffer(this.length) ) ) } ,bit_slice:function(from,to) {;
 return(function(it) {return(function(xs) {var x,x0,xi,xl,xr;
 for(var xi=0,xl=xs.length;
