@@ -39,6 +39,7 @@ caterwaul.module('bitwise', 'js_all', function ($) {
                                                                    'B[_x * _y]'.qs  |-rule| 'B[_x] /~bit_repeat/ _y'.qse,
                                                                    'B[_x / _y]'.qs  |-rule| $.anonymizer('i')('B[_x] / i /~bit_slice/ i -where [i = _y]'.qse),
                                                                    'B[_x + _y]'.qs  |-rule| 'B[_x] /~bit_concat/ B[_y]'.qse,
+                                                                   'B[_x - _y]'.qs  |-rule| 'B[_y] /~bit_concat/ B[_x]'.qse,
                                                                    'B[_x << _y]'.qs |-rule| 'B[_x] /~push/ _y'.qse,
                                                                    'B[_x[_y]]'.qs   |-rule| 'S[B[_x][_y]]'.qs],
 
