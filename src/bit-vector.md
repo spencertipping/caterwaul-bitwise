@@ -21,14 +21,15 @@ In other words, bit vectors are little-endian but are indexed from LSB to MSB wi
 This is fairly straightforward stuff: we just index into the bit array and flip things. bit() is the user-friendly accessor that acts as either a getter or a setter depending on context (and
 when it's a setter it returns the receiver).
 
-        bit(n, b)  = arguments.length === 2 ? this.set_bit(n, b) -then- this : this.get_bit(n),  set_bit(n, b) = b ? this[n >>> 3] |= 1 << (n & 7) : this[n >>> 3] &= ~(1 << (n & 7)),
-                                                                                                 get_bit(n)    = !!(this[n >>> 3] & 1 << (n & 7)),
+        bit(n, b)    = arguments.length === 2 ? this.set_bit(n, b) -then- this : this.get_bit(n),  set_bit(n, b) = b ? this[n >>> 3] |= 1 << (n & 7) : this[n >>> 3] &= ~(1 << (n & 7)),
+                                                                                                   get_bit(n)    = !!(this[n >>> 3] & 1 << (n & 7)),
 
-        push(x)    = (this[(this.length = 7 + ++this.width >>> 3) - 1] |= 0) -then- this.bit(this.width - 1, x),
+        push(x)      = (this[(this.length = 7 + ++this.width >>> 3) - 1] |= 0) -then- this.bit(this.width - 1, x),
+        push_byte(x) = this.push(x & 128).push(x & 64).push(x & 32).push(x & 16).push(x & 8).push(x & 4).push(x & 2).push(x & 1),
 
-        toString() = ni[this.width - 1, 0, -1] *[(xi & 7 ? '' : ' ') + +this.bit(x)] -seq -re- it.join(''),
-        array()    = []                      -se- this *![it[xl - xi - 1] = x] /seq,
-        buffer()   = new Buffer(this.length) -se- this *![it[xl - xi - 1] = x] /seq,         // Only works in node.js
+        toString()   = ni[this.width - 1, 0, -1] *[(xi & 7 ? '' : ' ') + +this.bit(x)] -seq -re- it.join(''),
+        array()      = []                      -se- this *![it[xl - xi - 1] = x] /seq,
+        buffer()     = new Buffer(this.length) -se- this *![it[xl - xi - 1] = x] /seq,         // Only works in node.js
 
 # Bit group access
 
