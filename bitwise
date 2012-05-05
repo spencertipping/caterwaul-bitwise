@@ -1709,15 +1709,16 @@ Bit accessors.
 This is fairly straightforward stuff: we just index into the bit array and flip things. bit() is the user-friendly accessor that acts as either a getter or a setter depending on context (and
 when it's a setter it returns the receiver).
 
-    bit(n, b)    = arguments.length === 2 ? this.set_bit(n, b) -then- this : this.get_bit(n),  set_bit(n, b) = b ? this[n >>> 3] |= 1 << (n & 7) : this[n >>> 3] &= ~(1 << (n & 7)),
-                                                                                               get_bit(n)    = !!(this[n >>> 3] & 1 << (n & 7)),
+    bit(n, b)       = arguments.length === 2 ? this.set_bit(n, b) -then- this : this.get_bit(n),  set_bit(n, b) = b ? this[n >>> 3] |= 1 << (n & 7) : this[n >>> 3] &= ~(1 << (n & 7)),
+                                                                                                  get_bit(n)    = !!(this[n >>> 3] & 1 << (n & 7)),
 
-    push(x)      = (this[(this.length = 7 + ++this.width >>> 3) - 1] |= 0) -then- this.bit(this.width - 1, x),
-    push_byte(x) = this.push(x & 128).push(x & 64).push(x & 32).push(x & 16).push(x & 8).push(x & 4).push(x & 2).push(x & 1),
+    push(x)         = (this[(this.length = 7 + ++this.width >>> 3) - 1] |= 0) -then- this.bit(this.width - 1, x),
+    push_byte(x)    = this.push(x & 128).push(x & 64).push(x & 32).push(x & 16).push(x & 8).push(x & 4).push(x & 2).push(x & 1),
+    push_bits(x, n) = this.push_bits(x >>> 1, n - 1) -when.n -then- this.push(x & 1),
 
-    toString()   = ni[this.width - 1, 0, -1] *[(xi & 7 ? '' : ' ') + +this.bit(x)] -seq -re- it.join(''),
-    array()      = []                      -se- this *![it[xl - xi - 1] = x] /seq,
-    buffer()     = new Buffer(this.length) -se- this *![it[xl - xi - 1] = x] /seq,         // Only works in node.js
+    toString()      = ni[this.width - 1, 0, -1] *[(xi & 7 ? '' : ' ') + +this.bit(x)] -seq -re- it.join(''),
+    array()         = []                      -se- this *![it[xl - xi - 1] = x] /seq,
+    buffer()        = new Buffer(this.length) -se- this *![it[xl - xi - 1] = x] /seq,           // Only works in node.js
 
 Bit group access.
 These functions access single bits or ranges of bits, but they all return more bit-vector objects. The functions here are prefixed with bit_ to avoid conflicts with array methods. Most of
@@ -1766,13 +1767,14 @@ logical bit-width; this is important for things like repetition.
           binary(m)                = m && constructor_for_bits(m[1].split('') *[+xs[xl - xi - 1]] -seq),
           hex(m)                   = m && constructor_for_bits(m[1].toLowerCase().split('') *['0123456789abcdef'.indexOf(x)] *~![n[4] *i[xs[xl - xi - 1] >>> i & 1] -seq] -seq),
 
-          toplevel_rules           = ['B[_x]'.qs /-rule/ literal,  'B[+_x]'.qs      |-rule| 'new caterwaul.bit_vector(0) /~push/ _x'.qse,
-                                                                   'B[_x * _y]'.qs  |-rule| 'B[_x] /~bit_repeat/ _y'.qse,
-                                                                   'B[_x / _y]'.qs  |-rule| $.anonymizer('i')('B[_x] / i /~bit_slice/ i -where [i = _y]'.qse),
-                                                                   'B[_x + _y]'.qs  |-rule| 'B[_x] /~bit_concat/ B[_y]'.qse,
-                                                                   'B[_x - _y]'.qs  |-rule| 'B[_y] /~bit_concat/ B[_x]'.qse,
-                                                                   'B[_x << _y]'.qs |-rule| 'B[_x] /~push/ _y'.qse,
-                                                                   'B[_x[_y]]'.qs   |-rule| 'S[B[_x][_y]]'.qs],
+          toplevel_rules           = ['B[_x]'.qs /-rule/ literal,  'B[+_x]'.qs         |-rule| 'new caterwaul.bit_vector(0) /~push/ _x'.qse,
+                                                                   'B[_x * _y]'.qs     |-rule| 'B[_x] /~bit_repeat/ _y'.qse,
+                                                                   'B[_x / _y]'.qs     |-rule| $.anonymizer('i')('B[_x] / i /~bit_slice/ i -where [i = _y]'.qse),
+                                                                   'B[_x + _y]'.qs     |-rule| 'B[_x] /~bit_concat/ B[_y]'.qse,
+                                                                   'B[_x - _y]'.qs     |-rule| 'B[_y] /~bit_concat/ B[_x]'.qse,
+                                                                   'B[_x << _y%_n]'.qs |-rule| 'B[_x].push_bits(_y, _n)'.qse,
+                                                                   'B[_x << _y]'.qs    |-rule| 'B[_x] /~push/ _y'.qse,
+                                                                   'B[_x[_y]]'.qs      |-rule| 'S[B[_x][_y]]'.qs],
 
 Splicing.
 This library supports a few different operations for bit selection and splicing. The simplest is /x, which grabs bit x from the receiver. For example, you could write n/5 to get bit 5 (= 32)

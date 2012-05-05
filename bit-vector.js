@@ -5,7 +5,8 @@ return b?this[n>>>3] |=1<< (n&7)
 :this[n>>>3] &= ~ (1<< (n&7) ) } ,get_bit:function(n) {;
 return! ! (this[n>>>3] &1<< (n&7) ) } ,push:function(x) {;
 return( (this[ (this.length=7+ ++this.width>>>3) -1] |=0) ,this.bit(this.width-1,x) ) } ,push_byte:function(x) {;
-return this.push(x&128) .push(x&64) .push(x&32) .push(x&16) .push(x&8) .push(x&4) .push(x&2) .push(x&1) } ,toString:function() {;
+return this.push(x&128) .push(x&64) .push(x&32) .push(x&16) .push(x&8) .push(x&4) .push(x&2) .push(x&1) } ,push_bits:function(x,n) {;
+return(n&&this.push_bits(x>>>1,n-1) ,this.push(x&1) ) } ,toString:function() {;
 return(function(it) {return it.join( '' ) } ) .call(this, ( (function(xs) {var x,x0,xi,xl,xr;
 for(var xr=new xs.constructor() ,xi=0,xl=xs.length;
 xi<xl;
