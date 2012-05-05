@@ -28,26 +28,26 @@ Literal bit-vector quantities can be written in binary or hexadecimal:
 These quantities are stored in a 'bit vector' data structure that is accessible as an array of bytes but has extra methods for dealing with bits directly. In particular, bit vectors know their
 logical bit-width; this is important for things like repetition.
 
-      -where [literal(m)               = /^b([01]+)$/.exec(m._x.data) /!binary || /^x([0-9a-fA-F]+)$/.exec(m._x.data) /!hex,
+      -where [literal(m)               = /^b([_01]+)$/.exec(m._x.data) /!binary || /^x([_0-9a-fA-F]+)$/.exec(m._x.data) /!hex,
 
               // Note: egregiously inefficient.
               constructor_for_bits(bs) = bs /['new caterwaul.bit_vector(0)'.qs]['_e.push(_y)'.qs /~replace/ {_e: x0, _y: x ? '1' : '0'}] -seq,
 
               // Note: even more egregiously inefficient.
-              binary(m)                = m && constructor_for_bits(m[1].split('') *[+xs[xl - xi - 1]] -seq),
-              hex(m)                   = m && constructor_for_bits(m[1].toLowerCase().split('') *['0123456789abcdef'.indexOf(x)] *~![n[4] *i[xs[xl - xi - 1] >>> i & 1] -seq] -seq),
+              binary(m)                = m && constructor_for_bits(m[1].replace(/_/g, '').split('') *[+xs[xl - xi - 1]] -seq),
+              hex(m)                   = m && constructor_for_bits(m[1].replace(/_/g, '').toLowerCase().split('') *  ['0123456789abcdef'.indexOf(x)]
+                                                                                                                  *~![n[4] *i[xs[xl - xi - 1] >>> i & 1] -seq] -seq),
 
               toplevel_rules           = ['B[_x]'.qs /-rule/ literal,  'B[+_x]'.qs         |-rule| 'new caterwaul.bit_vector(0) /~push/ _x'.qse,
                                                                        'B[_x * _y]'.qs     |-rule| 'B[_x] /~bit_repeat/ _y'.qse,
                                                                        'B[_x / _y]'.qs     |-rule| $.anonymizer('i')('B[_x] / i /~bit_slice/ i -where [i = _y]'.qse),
                                                                        'B[_x + _y]'.qs     |-rule| 'B[_x] /~bit_concat/ B[_y]'.qse,
                                                                        'B[_x - _y]'.qs     |-rule| 'B[_y] /~bit_concat/ B[_x]'.qse,
-                                                                       'B[_x << _y%_n]'.qs |-rule| 'B[_x].push_bits(_y, _n)'.qse,
                                                                        'B[_x << _y]'.qs    |-rule| 'B[_x] /~push/ _y'.qse,
+                                                                       'B[_x << _y%_n]'.qs |-rule| 'B[_x].push_bits(_y, _n)'.qse,
                                                                        'B[_x[_y]]'.qs      |-rule| 'S[B[_x][_y]]'.qs,
 
-                                                                       // Distributive properties
-                                                                       'B[(_x)]'.qs        |-rule| '(B[_x])'.qs,
+                                         /* Distributive properties */ 'B[(_x)]'.qs        |-rule| '(B[_x])'.qs,
                                                                        'B[[_x]]'.qs        |-rule| '[B[_x]]'.qs,
                                                                        'B[_x = _y]'.qs     |-rule| '_x = B[_y]'.qs,
                                                                        'B[_x, _y]'.qs      |-rule| 'B[_x], B[_y]'.qs],
