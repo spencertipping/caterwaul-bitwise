@@ -44,7 +44,13 @@ logical bit-width; this is important for things like repetition.
                                                                        'B[_x - _y]'.qs     |-rule| 'B[_y] /~bit_concat/ B[_x]'.qse,
                                                                        'B[_x << _y%_n]'.qs |-rule| 'B[_x].push_bits(_y, _n)'.qse,
                                                                        'B[_x << _y]'.qs    |-rule| 'B[_x] /~push/ _y'.qse,
-                                                                       'B[_x[_y]]'.qs      |-rule| 'S[B[_x][_y]]'.qs],
+                                                                       'B[_x[_y]]'.qs      |-rule| 'S[B[_x][_y]]'.qs,
+
+                                                                       // Distributive properties
+                                                                       'B[(_x)]'.qs        |-rule| '(B[_x])'.qs,
+                                                                       'B[[_x]]'.qs        |-rule| '[B[_x]]'.qs,
+                                                                       'B[_x = _y]'.qs     |-rule| '_x = B[_y]'.qs,
+                                                                       'B[_x, _y]'.qs      |-rule| 'B[_x], B[_y]'.qs],
 
 # Splicing
 
