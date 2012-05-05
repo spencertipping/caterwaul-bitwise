@@ -1758,7 +1758,7 @@ Literal bit-vector quantities can be written in binary or hexadecimal:
 These quantities are stored in a 'bit vector' data structure that is accessible as an array of bytes but has extra methods for dealing with bits directly. In particular, bit vectors know their
 logical bit-width; this is important for things like repetition.
 
-  -where [literal(m)               = /^b([_01]+)$/.exec(m._x.data) /!binary || /^x([_0-9a-fA-F]+)$/.exec(m._x.data) /!hex,
+  -where [literal(m)               = /^b([_01]+)$/.exec(m._x.data) /!binary || /^x([_0-9a-fA-F]+)$/.exec(m._x.data) /!hex || m._x,
 
           // Note: egregiously inefficient.
           constructor_for_bits(bs) = bs /['new caterwaul.bit_vector(0)'.qs]['_e.push(_y)'.qs /~replace/ {_e: x0, _y: x ? '1' : '0'}] -seq,

@@ -1,6 +1,6 @@
 caterwaul.module( 'bitwise' , (function(qs,qs1,qs2,qs3,qs4,qse,qs5,qse1,qs6,qse2,qs7,qse3,qs8,qse4,qs9,qse5,qsa,qse6,qsb,qsc,qsd,qsf,qsg,qsh,qsi,qsj,qsk,qsl,qsm,qse7,qsn,qse8,qso,qse9,qsp,qsea) {var result= (function($) { ($.all) .push( 'bitwise' ) ,$.bitwise=function(caterwaul_function) {;
 return(function(it) {return it.modifiers.bitwise=$.grammar( 'B S' , {initial:qs} , (function(rule,anon) {return(function() {var literal=function(m) {;
-return binary( /^b([_01]+)$/ .exec(m._x.data) ) ||hex( /^x([_0-9a-fA-F]+)$/ .exec(m._x.data) ) } ,constructor_for_bits=function(bs) {;
+return binary( /^b([_01]+)$/ .exec(m._x.data) ) ||hex( /^x([_0-9a-fA-F]+)$/ .exec(m._x.data) ) ||m._x} ,constructor_for_bits=function(bs) {;
 return(function(xs) {var x,x0,xi,xl,xr;
 for(var x0= (qs1) ,xi=0,xl=xs.length;
 xi<xl;
