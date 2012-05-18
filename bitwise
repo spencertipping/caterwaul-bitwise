@@ -645,7 +645,7 @@ sh('waul src/bit-vector.waul && mv src/bit-vector.js ./') unless $$options{-W};
 __
 meta::function('repl', <<'__');
 render('-W');
-sh('waul -e src/bit-vector.waul.sdoc -e src/bitwise.waul.sdoc -c "js_all bitwise"');
+sh('waul -e bit-vector.js -e bitwise.js -c "js_all bitwise"');
 
 __
 meta::function('rm', <<'__');
@@ -1714,7 +1714,7 @@ when it's a setter it returns the receiver).
 
     push(x)         = (this[(this.length = 7 + ++this.width >>> 3) - 1] |= 0) -then- this.bit(this.width - 1, x),
     push_byte(x)    = this.push(x & 128).push(x & 64).push(x & 32).push(x & 16).push(x & 8).push(x & 4).push(x & 2).push(x & 1),
-    push_bits(x, n) = this.push_bits(x >>> 1, n - 1) -when.n -then- this.push(x & 1),
+    push_bits(x, n) = this.push(x & 1).push_bits(x >>> 1, n - 1) /when.n -then- this,
 
     toString()      = ni[this.width - 1, 0, -1] *[(xi & 7 ? '' : ' ') + +this.bit(x)] -seq -re- it.join(''),
     array()         = []                      -se- this *![it[xl - xi - 1] = x] /seq,
@@ -1769,6 +1769,7 @@ logical bit-width; this is important for things like repetition.
                                                                                                               *~![n[4] *i[xs[xl - xi - 1] >>> i & 1] -seq] -seq),
 
           toplevel_rules           = ['B[_x]'.qs /-rule/ literal,  'B[+_x]'.qs         |-rule| 'new caterwaul.bit_vector(0) /~push/ _x'.qse,
+                                                                   'B[_x%_n]'.qs       |-rule| 'new caterwaul.bit_vector(0).push_bits(_x, _n)'.qse,
                                                                    'B[_x * _y]'.qs     |-rule| 'B[_x] /~bit_repeat/ _y'.qse,
                                                                    'B[_x / _y]'.qs     |-rule| $.anonymizer('i')('B[_x] / i /~bit_slice/ i -where [i = _y]'.qse),
                                                                    'B[_x + _y]'.qs     |-rule| 'B[_x] /~bit_concat/ B[_y]'.qse,

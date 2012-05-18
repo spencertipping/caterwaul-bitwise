@@ -37,6 +37,7 @@ caterwaul.module('bitwise', 'js_all', function ($) {
                                                                                                               *~![n[4] *i[xs[xl - xi - 1] >>> i & 1] -seq] -seq),
 
           toplevel_rules           = ['B[_x]'.qs /-rule/ literal,  'B[+_x]'.qs         |-rule| 'new caterwaul.bit_vector(0) /~push/ _x'.qse,
+                                                                   'B[_x%_n]'.qs       |-rule| 'new caterwaul.bit_vector(0).push_bits(_x, _n)'.qse,
                                                                    'B[_x * _y]'.qs     |-rule| 'B[_x] /~bit_repeat/ _y'.qse,
                                                                    'B[_x / _y]'.qs     |-rule| $.anonymizer('i')('B[_x] / i /~bit_slice/ i -where [i = _y]'.qse),
                                                                    'B[_x + _y]'.qs     |-rule| 'B[_x] /~bit_concat/ B[_y]'.qse,

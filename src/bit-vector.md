@@ -26,7 +26,7 @@ when it's a setter it returns the receiver).
 
         push(x)         = (this[(this.length = 7 + ++this.width >>> 3) - 1] |= 0) -then- this.bit(this.width - 1, x),
         push_byte(x)    = this.push(x & 128).push(x & 64).push(x & 32).push(x & 16).push(x & 8).push(x & 4).push(x & 2).push(x & 1),
-        push_bits(x, n) = this.push_bits(x >>> 1, n - 1) -when.n -then- this.push(x & 1),
+        push_bits(x, n) = this.push(x & 1).push_bits(x >>> 1, n - 1) /when.n -then- this,
 
         toString()      = ni[this.width - 1, 0, -1] *[(xi & 7 ? '' : ' ') + +this.bit(x)] -seq -re- it.join(''),
         array()         = []                      -se- this *![it[xl - xi - 1] = x] /seq,
